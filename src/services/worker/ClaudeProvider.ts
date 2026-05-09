@@ -442,6 +442,7 @@ export class ClaudeProvider {
   private getModelId(): string {
     const settingsPath = paths.settings();
     const settings = SettingsDefaultsManager.loadFromFile(settingsPath);
-    return settings.CLAUDE_MEM_MODEL;
+    // Return empty string to inherit model from parent session (LM Studio will use active model)
+    return settings.CLAUDE_MEM_MODEL || '';
   }
 }

@@ -76,7 +76,7 @@ export interface SettingsDefaults {
 
 export class SettingsDefaultsManager {
   private static readonly DEFAULTS: SettingsDefaults = {
-    CLAUDE_MEM_MODEL: 'claude-haiku-4-5-20251001',
+    CLAUDE_MEM_MODEL: '', // Empty by default — inherits model from parent session (for LM Studio/local hosting users)
     CLAUDE_MEM_CONTEXT_OBSERVATIONS: '50',
     CLAUDE_MEM_WORKER_PORT: String(37700 + ((process.getuid?.() ?? 77) % 100)),
     CLAUDE_MEM_WORKER_HOST: '127.0.0.1',

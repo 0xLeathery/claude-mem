@@ -11,6 +11,7 @@ describe('SessionManager queue integration', () => {
   let manager: SessionManager;
 
   beforeEach(() => {
+    process.env.CLAUDE_MEM_QUEUE_ENGINE = 'sqlite';
     db = new ClaudeMemDatabase(':memory:').db;
     store = new SessionStore(db);
 
@@ -31,6 +32,7 @@ describe('SessionManager queue integration', () => {
   afterEach(async () => {
     await manager.shutdownAll();
     db.close();
+    delete process.env.CLAUDE_MEM_QUEUE_ENGINE;
   });
 
   test('confirmClaimedMessages only deletes claimed rows and preserves newly queued work', async () => {

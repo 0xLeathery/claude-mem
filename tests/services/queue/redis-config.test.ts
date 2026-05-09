@@ -1,4 +1,6 @@
-import { afterEach, describe, expect, mock, test } from 'bun:test';
+// SPDX-License-Identifier: Apache-2.0
+
+import { afterEach, describe, expect, test } from 'bun:test';
 import { mkdtempSync, rmSync, writeFileSync } from 'fs';
 import { join } from 'path';
 import { tmpdir } from 'os';
@@ -20,7 +22,6 @@ describe('redis queue config', () => {
       rmSync(tempDir, { recursive: true, force: true });
       tempDir = null;
     }
-    mock.restore();
   });
 
   test('loads queue settings from settings file with env override precedence', async () => {
@@ -35,10 +36,8 @@ describe('redis queue config', () => {
       CLAUDE_MEM_QUEUE_REDIS_PREFIX: 'settings-prefix',
     }), 'utf-8');
 
-    mock.module('../../../src/shared/paths.js', () => ({
-      USER_SETTINGS_PATH: settingsPath,
-    }));
-
+    // Set env var to point to our test settings file
+    setEnv('CLAUDE_MEM_DATA_DIR', tempDir);
     setEnv('CLAUDE_MEM_REDIS_HOST', 'env-host');
 
     const { getRedisQueueConfig, getObservationQueueEngineName } = await import('../../../src/server/queue/redis-config.js');

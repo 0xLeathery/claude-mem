@@ -6,10 +6,11 @@ mock.module('../../../src/shared/SettingsDefaultsManager.js', () => ({
   SettingsDefaultsManager: {
     get: (key: string) => {
       if (key === 'CLAUDE_MEM_DATA_DIR') return join(homedir(), '.claude-mem');
+      if (key === 'CLAUDE_MEM_QUEUE_ENGINE') return 'sqlite';
       return '';
     },
     getInt: () => 0,
-    loadFromFile: () => ({ CLAUDE_MEM_EXCLUDED_PROJECTS: '' }),
+    loadFromFile: () => ({ CLAUDE_MEM_EXCLUDED_PROJECTS: '', CLAUDE_MEM_QUEUE_ENGINE: 'sqlite' }),
   },
 }));
 
@@ -39,6 +40,25 @@ mock.module('../../../src/shared/worker-utils.js', () => ({
     return { status: 'queued' };
   },
   isWorkerFallback: (_result: unknown) => false,
+}));
+
+mock.module('../../../src/utils/logger.js', () => ({
+  logger: {
+    info: () => {},
+    debug: () => {},
+    warn: () => {},
+    error: () => {},
+    dataIn: () => {},
+    dataOut: () => {},
+    success: () => {},
+    failure: () => {},
+    timing: () => {},
+    formatTool: () => '',
+    correlationId: () => '',
+    sessionId: () => '',
+    happyPathError: <T>(fn: () => T) => fn(),
+  },
+  LogLevel: { DEBUG: 0, INFO: 1, WARN: 2, ERROR: 3 },
 }));
 
 import { logger } from '../../../src/utils/logger.js';

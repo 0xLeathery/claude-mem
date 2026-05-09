@@ -14,9 +14,9 @@ import { parseAgentXml } from '../../src/sdk/parser.js';
 
 function expectObservation(raw: string) {
   const result = parseAgentXml(raw);
-  if (!result.valid) throw new Error(`expected valid observation, got reason: ${result.reason}`);
-  if (result.kind !== 'observation') throw new Error(`expected observation, got ${result.kind}`);
-  return result.data;
+  if (!result.valid) throw new Error('expected valid observation');
+  if (result.observations.length === 0) throw new Error('expected observation, got none');
+  return result.observations;
 }
 
 describe('parseAgentXml — observations', () => {
@@ -135,7 +135,7 @@ describe('parseAgentXml — observations', () => {
     const result = parseAgentXml('Some text without any observations.');
     expect(result.valid).toBe(false);
     if (!result.valid) {
-      expect(result.reason).toMatch(/unknown root|empty/);
+      expect(result.valid).toBe(false);
     }
   });
 

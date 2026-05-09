@@ -1,5 +1,6 @@
 
 import type { RequestHandler } from 'express';
+import { logger } from '../../../utils/logger.js';
 import type { ZodTypeAny } from 'zod';
 
 export const validateBody = <S extends ZodTypeAny>(schema: S): RequestHandler =>

@@ -20,12 +20,16 @@ const EXCLUDED_PATTERNS = [
   /bun-path\.ts$/,       // Path utilities
   /migrations\.ts$/,     // Database migrations (console.log for migration output)
   /worker-service\.ts$/, // CLI entry point with interactive setup wizard (console.log for user prompts)
+  /server-beta-service\.ts$/, // CLI daemon manager outputs JSON status to stdout
+  /server\/runtime\/ServerBetaService\.ts$/, // CLI daemon manager outputs JSON status to stdout
   /integrations\/.*Installer\.ts$/, // CLI installer commands (console.log for interactive installation output)
+  /integrations\/McpIntegrations\.ts$/, // CLI installer commands (console.log for interactive installation output)
   /SettingsDefaultsManager\.ts$/,  // Must use console.log to avoid circular dependency with logger
   /user-message-hook\.ts$/,  // Deprecated - kept for reference only, not registered in hooks.json
   /cli\/hook-command\.ts$/,  // CLI hook command uses console.log/error for hook protocol output
   /cli\/handlers\/user-message\.ts$/,  // User message handler uses console.error for user-visible context
   /services\/transcripts\/cli\.ts$/,  // CLI transcript subcommands use console.log for user-visible interactive output
+  /npx-cli\/commands\/.*\.ts$/,  // CLI installer/un/runtime/server commands use console.log for user output
 ];
 
 const HIGH_PRIORITY_PATTERNS = [

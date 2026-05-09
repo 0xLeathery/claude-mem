@@ -3,9 +3,8 @@ import { describe, it, expect, mock, beforeEach, afterEach, spyOn } from 'bun:te
 import type { Request, Response } from 'express';
 import { logger } from '../../../../src/utils/logger.js';
 
-mock.module('../../../../src/shared/paths.js', () => ({
-  getPackageRoot: () => '/tmp/test',
-}));
+// Use env var to avoid mocking paths.js which breaks other tests
+process.env.CLAUDE_MEM_DATA_DIR = '/tmp/test';
 mock.module('../../../../src/shared/worker-utils.js', () => ({
   getWorkerPort: () => 37777,
 }));

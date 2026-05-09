@@ -4,7 +4,7 @@ import { parseAgentXml, type ParsedObservation, type ParsedSummary } from '../..
 import { ingestSummary } from '../http/shared.js';
 import { updateCursorContextForProject } from '../../integrations/CursorHooksInstaller.js';
 import { notifyTelegram } from '../../integrations/TelegramNotifier.js';
-import { updateFolderClaudeMdFiles } from '../../../utils/claude-md-utils.js';
+import { updateFolderClaudeMdFiles, getTargetFilename } from '../../../utils/claude-md-utils.js';
 import { getWorkerPort } from '../../../shared/worker-utils.js';
 import { SettingsDefaultsManager } from '../../../shared/SettingsDefaultsManager.js';
 import { USER_SETTINGS_PATH } from '../../../shared/paths.js';
@@ -252,7 +252,7 @@ async function syncAndBroadcastObservations(
       updateFolderClaudeMdFiles(
         allFilePaths,
         session.project,
-        getWorkerPort(),
+        getTargetFilename(),
         projectRoot
       ).catch(error => {
         logger.warn('FOLDER_INDEX', 'CLAUDE.md update failed (non-critical)', { project: session.project }, error as Error);

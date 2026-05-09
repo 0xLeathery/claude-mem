@@ -24,7 +24,7 @@ export function detectWorktree(cwd: string): WorktreeInfo {
     stat = statSync(gitPath);
   } catch (error: unknown) {
     if (error instanceof Error && (error as NodeJS.ErrnoException).code !== 'ENOENT') {
-      console.warn(`[worktree] Unexpected error checking .git:`, error);
+      logger.warn(`[worktree] Unexpected error checking .git:`, error);
     }
     return NOT_A_WORKTREE;
   }
@@ -37,7 +37,7 @@ export function detectWorktree(cwd: string): WorktreeInfo {
   try {
     content = readFileSync(gitPath, 'utf-8').trim();
   } catch (error: unknown) {
-    console.warn(`[worktree] Failed to read .git file:`, error instanceof Error ? error.message : String(error));
+    logger.warn(`[worktree] Failed to read .git file:`, error instanceof Error ? error.message : String(error));
     return NOT_A_WORKTREE;
   }
 

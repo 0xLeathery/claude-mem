@@ -279,7 +279,7 @@ describe('updateFolderClaudeMdFiles', () => {
     const fetchMock = mock(() => Promise.resolve({ ok: true } as Response));
     global.fetch = fetchMock;
 
-    await updateFolderClaudeMdFiles([], 'test-project', 37777);
+    await updateFolderClaudeMdFiles([], 'test-project', 'CLAUDE.md');
 
     expect(fetchMock).not.toHaveBeenCalled();
   });
@@ -300,7 +300,7 @@ describe('updateFolderClaudeMdFiles', () => {
       json: () => Promise.resolve(apiResponse)
     } as Response));
 
-    await updateFolderClaudeMdFiles([filePath], 'test-project', 37777);
+    await updateFolderClaudeMdFiles([filePath], 'test-project', 'CLAUDE.md');
 
     const claudeMdPath = join(folderPath, 'CLAUDE.md');
     expect(existsSync(claudeMdPath)).toBe(true);
@@ -328,7 +328,7 @@ describe('updateFolderClaudeMdFiles', () => {
     } as Response));
     global.fetch = fetchMock;
 
-    await updateFolderClaudeMdFiles([file1, file2], 'test-project', 37777);
+    await updateFolderClaudeMdFiles([file1, file2], 'test-project', 'CLAUDE.md');
 
     expect(fetchMock).toHaveBeenCalledTimes(1);
   });
@@ -342,7 +342,7 @@ describe('updateFolderClaudeMdFiles', () => {
       status: 404
     } as Response));
 
-    await expect(updateFolderClaudeMdFiles([filePath], 'test-project', 37777)).resolves.toBeUndefined();
+    await expect(updateFolderClaudeMdFiles([filePath], 'test-project', 'CLAUDE.md')).resolves.toBeUndefined();
 
     const claudeMdPath = join(folderPath, 'CLAUDE.md');
     expect(existsSync(claudeMdPath)).toBe(false);
@@ -354,7 +354,7 @@ describe('updateFolderClaudeMdFiles', () => {
 
     global.fetch = mock(() => Promise.reject(new Error('Network error')));
 
-    await expect(updateFolderClaudeMdFiles([filePath], 'test-project', 37777)).resolves.toBeUndefined();
+    await expect(updateFolderClaudeMdFiles([filePath], 'test-project', 'CLAUDE.md')).resolves.toBeUndefined();
 
     const claudeMdPath = join(folderPath, 'CLAUDE.md');
     expect(existsSync(claudeMdPath)).toBe(false);
@@ -376,7 +376,7 @@ describe('updateFolderClaudeMdFiles', () => {
     await updateFolderClaudeMdFiles(
       ['src/utils/file.ts'],  // relative path
       'test-project',
-      37777,
+      'CLAUDE.md',
       '/home/user/my-project'  
     );
 
@@ -404,7 +404,7 @@ describe('updateFolderClaudeMdFiles', () => {
     await updateFolderClaudeMdFiles(
       [filePath],  // absolute path within tempDir
       'test-project',
-      37777,
+      'CLAUDE.md',
       tempDir  
     );
 
@@ -432,7 +432,7 @@ describe('updateFolderClaudeMdFiles', () => {
     await updateFolderClaudeMdFiles(
       [filePath],  // absolute path
       'test-project',
-      37777
+      'CLAUDE.md'
       // No projectRoot - backward compatibility
     );
 
@@ -457,7 +457,7 @@ describe('updateFolderClaudeMdFiles', () => {
     await updateFolderClaudeMdFiles(
       ['src/utils/file.ts'],
       'test-project',
-      37777,
+      'CLAUDE.md',
       '/home/user/my-project/'  
     );
 
@@ -485,7 +485,7 @@ describe('updateFolderClaudeMdFiles', () => {
     await updateFolderClaudeMdFiles(
       ['src/utils/file.ts'],
       'test-project',
-      37777,
+      'CLAUDE.md',
       join(tempDir, 'project-root-write-test')
     );
 
@@ -513,7 +513,7 @@ describe('updateFolderClaudeMdFiles', () => {
     await updateFolderClaudeMdFiles(
       ['src/utils/file1.ts', 'src/utils/file2.ts', 'src/utils/file3.ts'],
       'test-project',
-      37777,
+      'CLAUDE.md',
       '/home/user/project'
     );
 
@@ -523,13 +523,19 @@ describe('updateFolderClaudeMdFiles', () => {
   });
 
   it('should handle empty string paths gracefully with projectRoot', async () => {
-    const fetchMock = mock(() => Promise.resolve({ ok: true } as Response));
+    const apiResponse = {
+      content: [{ text: '| #123 | 4:30 PM | 🔵 | Test | ~100 |' }]
+    };
+    const fetchMock = mock(() => Promise.resolve({
+      ok: true,
+      json: () => Promise.resolve(apiResponse)
+    } as Response));
     global.fetch = fetchMock;
 
     await updateFolderClaudeMdFiles(
       ['', 'src/file.ts', ''],  // includes empty strings
       'test-project',
-      37777,
+      'CLAUDE.md',
       '/home/user/project'
     );
 
@@ -547,7 +553,7 @@ describe('path validation in updateFolderClaudeMdFiles', () => {
     await updateFolderClaudeMdFiles(
       ['~/.claude-mem/logs/worker.log'],
       'test-project',
-      37777,
+      'CLAUDE.md',
       tempDir
     );
 
@@ -561,7 +567,7 @@ describe('path validation in updateFolderClaudeMdFiles', () => {
     await updateFolderClaudeMdFiles(
       ['https://example.com/file.ts'],
       'test-project',
-      37777,
+      'CLAUDE.md',
       tempDir
     );
 
@@ -575,7 +581,7 @@ describe('path validation in updateFolderClaudeMdFiles', () => {
     await updateFolderClaudeMdFiles(
       ['PR #610 on thedotmack/CLAUDE.md'],
       'test-project',
-      37777,
+      'CLAUDE.md',
       tempDir
     );
 
@@ -589,7 +595,7 @@ describe('path validation in updateFolderClaudeMdFiles', () => {
     await updateFolderClaudeMdFiles(
       ['issue#123/file.ts'],
       'test-project',
-      37777,
+      'CLAUDE.md',
       tempDir
     );
 
@@ -603,7 +609,7 @@ describe('path validation in updateFolderClaudeMdFiles', () => {
     await updateFolderClaudeMdFiles(
       ['../../../etc/passwd'],
       'test-project',
-      37777,
+      'CLAUDE.md',
       tempDir
     );
 
@@ -617,7 +623,7 @@ describe('path validation in updateFolderClaudeMdFiles', () => {
     await updateFolderClaudeMdFiles(
       ['/etc/passwd'],
       'test-project',
-      37777,
+      'CLAUDE.md',
       tempDir
     );
 
@@ -639,7 +645,7 @@ describe('path validation in updateFolderClaudeMdFiles', () => {
     await updateFolderClaudeMdFiles(
       [absolutePathInProject],
       'test-project',
-      37777,
+      'CLAUDE.md',
       tempDir
     );
 
@@ -659,7 +665,7 @@ describe('path validation in updateFolderClaudeMdFiles', () => {
     await updateFolderClaudeMdFiles(
       ['/home/user/valid/file.ts'],
       'test-project',
-      37777
+      'CLAUDE.md'
       // No projectRoot provided
     );
 
@@ -679,7 +685,7 @@ describe('path validation in updateFolderClaudeMdFiles', () => {
     await updateFolderClaudeMdFiles(
       ['src/utils/logger.ts'],
       'test-project',
-      37777,
+      'CLAUDE.md',
       tempDir
     );
 
@@ -695,7 +701,7 @@ describe('issue #814 - reject consecutive duplicate path segments', () => {
     await updateFolderClaudeMdFiles(
       ['frontend/src/file.ts'],
       'test-project',
-      37777,
+      'CLAUDE.md',
       path.join(tempDir, 'frontend')  
     );
 
@@ -709,7 +715,7 @@ describe('issue #814 - reject consecutive duplicate path segments', () => {
     await updateFolderClaudeMdFiles(
       ['src/components/file.ts'],
       'test-project',
-      37777,
+      'CLAUDE.md',
       path.join(tempDir, 'src')  
     );
 
@@ -729,7 +735,7 @@ describe('issue #814 - reject consecutive duplicate path segments', () => {
     await updateFolderClaudeMdFiles(
       ['src/components/src/utils/file.ts'],
       'test-project',
-      37777,
+      'CLAUDE.md',
       tempDir
     );
 
@@ -745,7 +751,7 @@ describe('issue #859 - skip folders with active CLAUDE.md', () => {
     await updateFolderClaudeMdFiles(
       ['/project/src/utils/CLAUDE.md'],
       'test-project',
-      37777,
+      'CLAUDE.md',
       '/project'
     );
 
@@ -759,7 +765,7 @@ describe('issue #859 - skip folders with active CLAUDE.md', () => {
     await updateFolderClaudeMdFiles(
       ['/project/src/CLAUDE.md'],
       'test-project',
-      37777,
+      'CLAUDE.md',
       '/project'
     );
 
@@ -782,7 +788,7 @@ describe('issue #859 - skip folders with active CLAUDE.md', () => {
         '/project/src/services/api.ts'   
       ],
       'test-project',
-      37777,
+      'CLAUDE.md',
       '/project'
     );
 
@@ -799,7 +805,7 @@ describe('issue #859 - skip folders with active CLAUDE.md', () => {
     await updateFolderClaudeMdFiles(
       ['src/components/CLAUDE.md'],
       'test-project',
-      37777,
+      'CLAUDE.md',
       '/project'
     );
 
@@ -823,7 +829,7 @@ describe('issue #859 - skip folders with active CLAUDE.md', () => {
         '/project/src/c/file.ts'
       ],
       'test-project',
-      37777,
+      'CLAUDE.md',
       '/project'
     );
 
@@ -843,7 +849,7 @@ describe('issue #859 - skip folders with active CLAUDE.md', () => {
     await updateFolderClaudeMdFiles(
       [join(projectRoot, 'file.ts')],
       'test-project',
-      37777,
+      'CLAUDE.md',
       projectRoot
     );
 
@@ -859,7 +865,7 @@ describe('issue #912 - skip unsafe directories for CLAUDE.md generation', () => 
     await updateFolderClaudeMdFiles(
       ['node_modules/lodash/index.js'],
       'test-project',
-      37777,
+      'CLAUDE.md',
       tempDir
     );
 
@@ -873,7 +879,7 @@ describe('issue #912 - skip unsafe directories for CLAUDE.md generation', () => 
     await updateFolderClaudeMdFiles(
       ['.git/refs/heads/main'],
       'test-project',
-      37777,
+      'CLAUDE.md',
       tempDir
     );
 
@@ -887,7 +893,7 @@ describe('issue #912 - skip unsafe directories for CLAUDE.md generation', () => 
     await updateFolderClaudeMdFiles(
       ['app/src/main/res/layout/activity_main.xml'],
       'test-project',
-      37777,
+      'CLAUDE.md',
       tempDir
     );
 
@@ -901,7 +907,7 @@ describe('issue #912 - skip unsafe directories for CLAUDE.md generation', () => 
     await updateFolderClaudeMdFiles(
       ['build/outputs/apk/debug/app-debug.apk'],
       'test-project',
-      37777,
+      'CLAUDE.md',
       tempDir
     );
 
@@ -915,7 +921,7 @@ describe('issue #912 - skip unsafe directories for CLAUDE.md generation', () => 
     await updateFolderClaudeMdFiles(
       ['src/__pycache__/module.cpython-311.pyc'],
       'test-project',
-      37777,
+      'CLAUDE.md',
       tempDir
     );
 
@@ -935,7 +941,7 @@ describe('issue #912 - skip unsafe directories for CLAUDE.md generation', () => 
     await updateFolderClaudeMdFiles(
       ['src/utils/file.ts'],
       'test-project',
-      37777,
+      'CLAUDE.md',
       tempDir
     );
 
@@ -949,11 +955,41 @@ describe('issue #912 - skip unsafe directories for CLAUDE.md generation', () => 
     await updateFolderClaudeMdFiles(
       ['packages/frontend/node_modules/react/index.js'],
       'test-project',
-      37777,
+      'CLAUDE.md',
       tempDir
     );
 
     expect(fetchMock).not.toHaveBeenCalled();
+  });
+});
+
+describe('updateFolderClaudeMdFiles third parameter as filename', () => {
+  it('should use third parameter as filename when set to CLAUDE.local.md', async () => {
+    const folderPath = join(tempDir, 'filename-param-test');
+    mkdirSync(folderPath, { recursive: true });
+    const filePath = join(folderPath, 'file.ts');
+
+    const apiResponse = {
+      content: [{ text: '| #123 | 4:30 PM | 🔵 | Test | ~100 |' }]
+    };
+
+    const fetchMock = mock(() => Promise.resolve({
+      ok: true,
+      json: () => Promise.resolve(apiResponse)
+    } as Response));
+    global.fetch = fetchMock;
+
+    await updateFolderClaudeMdFiles(
+      [filePath],
+      'test-project',
+      'CLAUDE.local.md'  // passing filename as third arg
+    );
+
+    const localMdPath = join(folderPath, 'CLAUDE.local.md');
+    const regularMdPath = join(folderPath, 'CLAUDE.md');
+
+    expect(existsSync(localMdPath)).toBe(true);
+    expect(existsSync(regularMdPath)).toBe(false);
   });
 });
 
@@ -1031,7 +1067,7 @@ describe('CLAUDE.local.md support', () => {
     await updateFolderClaudeMdFiles(
       ['/project/src/utils/CLAUDE.local.md'],
       'test-project',
-      37777,
+      'CLAUDE.md',
       '/project'
     );
 
@@ -1055,7 +1091,7 @@ describe('CLAUDE.local.md support', () => {
         '/project/src/c/file.ts'             
       ],
       'test-project',
-      37777,
+      'CLAUDE.md',
       '/project'
     );
 

@@ -1,4 +1,6 @@
 
+import { logger } from '../../utils/logger.js';
+
 const RESTART_WINDOW_MS = 60_000;      
 const MAX_WINDOWED_RESTARTS = 10;      
 const MAX_CONSECUTIVE_FAILURES = 5;    

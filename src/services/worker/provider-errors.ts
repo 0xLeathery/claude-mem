@@ -1,4 +1,5 @@
 // F4 foundation: classified provider errors with extensible kind field.
+import { logger } from '../../utils/logger.js';
 export type ProviderErrorClass =
   | 'transient'
   | 'unrecoverable'

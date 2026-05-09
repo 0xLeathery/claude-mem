@@ -223,12 +223,11 @@ function isExcludedFolder(folderPath: string, excludePaths: string[]): boolean {
 export async function updateFolderClaudeMdFiles(
   filePaths: string[],
   project: string,
-  _port: number,
+  targetFilename: string,
   projectRoot?: string
 ): Promise<void> {
   const settings = SettingsDefaultsManager.loadFromFile(SETTINGS_PATH);
   const limit = parseInt(settings.CLAUDE_MEM_CONTEXT_OBSERVATIONS, 10) || 50;
-  const targetFilename = getTargetFilename(settings);
 
   let folderMdExcludePaths: string[] = [];
   try {

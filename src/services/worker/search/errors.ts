@@ -1,5 +1,6 @@
 
 import { AppError } from '../../server/ErrorHandler.js';
+import { logger } from '../../utils/logger.js';
 
 export class ChromaUnavailableError extends AppError {
   constructor(message: string, cause?: Error) {

@@ -1,5 +1,6 @@
 
 import express, { Request, Response } from 'express';
+import { logger } from '../../../utils/logger.js';
 import { z } from 'zod';
 import { BaseRouteHandler } from '../BaseRouteHandler.js';
 import { validateBody } from '../middleware/validateBody.js';

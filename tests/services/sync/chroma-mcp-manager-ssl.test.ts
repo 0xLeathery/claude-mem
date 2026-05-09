@@ -33,9 +33,8 @@ mock.module('../../../src/shared/SettingsDefaultsManager.js', () => ({
   },
 }));
 
-mock.module('../../../src/shared/paths.js', () => ({
-  USER_SETTINGS_PATH: '/tmp/fake-settings.json',
-}));
+// Use env var to avoid mocking paths.js which breaks other tests
+process.env.CLAUDE_MEM_DATA_DIR = '/tmp/fake-claude-mem-data';
 
 mock.module('../../../src/utils/logger.js', () => ({
   logger: {
@@ -44,6 +43,7 @@ mock.module('../../../src/utils/logger.js', () => ({
     warn: () => {},
     error: () => {},
     failure: () => {},
+    formatTool: (toolName: string, toolInput?: any) => toolInput ? `${toolName}(...)` : toolName,
   },
 }));
 
